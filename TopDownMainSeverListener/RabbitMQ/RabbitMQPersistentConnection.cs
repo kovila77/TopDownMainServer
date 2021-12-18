@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -33,7 +34,7 @@ namespace TopDownMainSeverListener.RabbitMQ
                 TryConnect();
             }
 
-            _eventBusRabbitMQ = new EventBusRabbitMQ(this, "new_server");
+            _eventBusRabbitMQ = new EventBusRabbitMQ(this, ConfigurationManager.AppSettings.Get("RabbitMQServerQueue"));
             _eventBusRabbitMQ.CreateConsumerChannel();
         }
 

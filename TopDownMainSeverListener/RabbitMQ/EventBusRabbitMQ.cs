@@ -72,6 +72,7 @@ namespace TopDownMainSeverListener.RabbitMQ
             }
         }
 
+        //// from example
         //public void PublishUserSaveFeedback(string _queueName, UserSaveFeedback publishModel, IDictionary<string, object> headers)
         //{
 
