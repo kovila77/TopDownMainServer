@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using PostgresEntities.Entities;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using TopDownMainSeverListener.Service;
+using TopDownMainServer;
 
 namespace TopDownMainSeverListener.RabbitMQ
 {

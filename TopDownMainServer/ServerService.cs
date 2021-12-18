@@ -8,7 +8,7 @@ using System.Timers;
 using Newtonsoft.Json;
 using PostgresEntities.Entities;
 
-namespace TopDownMainSeverListener.Service
+namespace TopDownMainServer
 {
     public class ServerService
     {
@@ -71,7 +71,7 @@ namespace TopDownMainSeverListener.Service
                {
                    int status = GetServerStatus(s);
 
-                   if (status == -1)
+                   if (status == 0)
                    {
                        sc.Servers.Remove(s);
                    }
@@ -84,7 +84,7 @@ namespace TopDownMainSeverListener.Service
             }
         }
 
-        public int GetServerStatus(Server server)
+        public static int GetServerStatus(Server server)
         {
             try
             {
@@ -109,7 +109,7 @@ namespace TopDownMainSeverListener.Service
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return -1;
+                return 0;
             }
         }
     }
