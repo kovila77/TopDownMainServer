@@ -45,42 +45,56 @@ namespace TopDownMainServer
 
         public void NewServer(Server server)
         {
-            using (ServersContext sc = new ServersContext())
+            try
             {
-                var ser = sc.Servers.Find(server.Address, server.Port);
-
-                if (ser is null)
+                using (ServersContext sc = new ServersContext())
                 {
-                    sc.Servers.Add(server);
-                }
-                else
-                {
-                    ser.Status = server.Status;
-                    ser.Info = server.Info;
-                }
+                    var ser = sc.Servers.Find(server.Address, server.Port);
 
-                sc.SaveChanges();
+                    if (ser is null)
+                    {
+                        sc.Servers.Add(server);
+                    }
+                    else
+                    {
+                        ser.Status = server.Status;
+                        ser.Info = server.Info;
+                    }
+
+                    sc.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
         public void UpdateServersStatus(bool deleteBadOnes = false)
         {
-            using (ServersContext sc = new ServersContext())
+            try
             {
-                Parallel.ForEach(sc.Servers.ToList(), s =>
-               {
-                   int status = GetServerStatus(s);
+                using (ServersContext sc = new ServersContext())
+                {
+                    Parallel.ForEach(sc.Servers.ToList(), s =>
+                   {
+                       int status = GetServerStatus(s);
 
-                   if (status == 0)
-                   {
-                       sc.Servers.Remove(s);
-                   }
-                   else
-                   {
-                       s.Status = status;
-                   }
-               });
-                sc.SaveChanges();
+                       if (status == 0)
+                       {
+                           sc.Servers.Remove(s);
+                       }
+                       else
+                       {
+                           s.Status = status;
+                       }
+                   });
+                    sc.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
