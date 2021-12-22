@@ -69,14 +69,17 @@ namespace TopDownMainServer
 
         public async Task<MatchmakingResult> GetServerAsync(CancellationTokenSource cancelSource)
         {
+	        Console.WriteLine("GetServerAsync");
             lock (_playersQueue)
             {
+	            Console.WriteLine("lock GetServerAsync");
                 _playersQueue.AddLast(cancelSource);
 
                 if (!_isMatchmaking && _playersQueue.Count > 1)
                 {
                     _timer.Interval = CountDownTime;
                     _timer.Start();
+                    Console.WriteLine("Timer Start!~!!!");
                     _isMatchmaking = true;
                 }
             }

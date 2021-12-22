@@ -6,13 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TopDownMainSeverListener.Services;
 
 namespace TopDownMainSeverListener
 {
     public class Program
     {
-        public static void Main(string[] args)
-        {
+        public static void Main(string[] args) {
+	        Task.Run(new MatchmakingService().Run);
             CreateHostBuilder(args).Build().Run();
         }
 
