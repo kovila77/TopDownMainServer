@@ -103,22 +103,25 @@ namespace TopDownMainServer
         {
             try
             {
-                TcpClient tcpClient = new TcpClient(server.Address, server.PingPort);
-                tcpClient.SendTimeout = 1000 * 15;
-                tcpClient.ReceiveTimeout = 1000 * 15;
-
-                using BinaryReader socketBinaryReader = new BinaryReader(tcpClient.GetStream());
-                using BinaryWriter socketBinaryWriter = new BinaryWriter(tcpClient.GetStream());
-                socketBinaryWriter.Write(1);
-
-                int response = socketBinaryReader.ReadInt32();
-                if (response is 1 or 2)
+                using (TcpClient tcpClient = new TcpClient(server.Address, server.PingPort))
                 {
-                    return response;
-                }
-                else
-                {
-                    throw new Exception("Unknown server status");
+
+                    tcpClient.SendTimeout = 1000 * 15;
+                    tcpClient.ReceiveTimeout = 1000 * 15;
+
+                    using BinaryReader socketBinaryReader = new BinaryReader(tcpClient.GetStream());
+                    using BinaryWriter socketBinaryWriter = new BinaryWriter(tcpClient.GetStream());
+                    socketBinaryWriter.Write(1);
+
+                    int response = socketBinaryReader.ReadInt32();
+                    if (response is 1 or 2)
+                    {
+                        return response;
+                    }
+                    else
+                    {
+                        throw new Exception("Unknown server status");
+                    }
                 }
             }
             catch (Exception e)

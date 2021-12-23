@@ -31,6 +31,7 @@ namespace TopDownMainSeverListener.Services {
 					{
 						Console.WriteLine(e.Message);
 					}
+                    tcpClient.Dispose();
 				});
             }
 		}
