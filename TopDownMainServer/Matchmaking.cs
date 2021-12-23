@@ -69,9 +69,9 @@ namespace TopDownMainServer
 
         public async Task<MatchmakingResult> GetServerAsync(CancellationTokenSource cancelSource)
         {
-            lock (_playersQueue)
+	        lock (_playersQueue)
             {
-                _playersQueue.AddLast(cancelSource);
+	            _playersQueue.AddLast(cancelSource);
 
                 if (!_isMatchmaking && _playersQueue.Count > 1)
                 {
