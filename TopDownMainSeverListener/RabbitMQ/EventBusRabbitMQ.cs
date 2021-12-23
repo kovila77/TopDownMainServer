@@ -37,7 +37,7 @@ namespace TopDownMainSeverListener.RabbitMQ
             }
 
             var channel = _persistentConnection.CreateModel();
-            channel.QueueDeclare(queue: _queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+            channel.QueueDeclare(queue: _queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
 
             var consumer = new EventingBasicConsumer(channel);
 
@@ -56,14 +56,15 @@ namespace TopDownMainSeverListener.RabbitMQ
             channel.CallbackException += (sender, ea) =>
             {
                 _consumerChannel.Dispose();
-                _consumerChannel = CreateConsumerChannel();
+                CreateConsumerChannel();
             };
 
-            return _consumerChannel;
+            _consumerChannel = channel;
+            return channel;
         }
 
         private void ReceivedEvent(object sender, BasicDeliverEventArgs e)
-        {
+        {   
             if (e.RoutingKey == _queueName)
             {
                 var message = Encoding.UTF8.GetString(e.Body.ToArray());
