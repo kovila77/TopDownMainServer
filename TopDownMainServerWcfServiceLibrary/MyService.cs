@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
 namespace TopDownMainServerWcfServiceLibrary
 {
+	[ServiceBehavior(IncludeExceptionDetailInFaults = true)]
     public class MyService : IMyService
     {
 	    public (string, int) GetAvailableServer() {
