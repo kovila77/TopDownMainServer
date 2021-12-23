@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Description;
@@ -15,9 +16,9 @@ namespace TopDownMainServerWcfServiceHost
 			ServiceMetadataBehavior behavior = new ServiceMetadataBehavior
 			{
 				HttpGetEnabled = true,
-				MetadataExporter = { PolicyVersion = PolicyVersion.Policy15 },
+				MetadataExporter = { PolicyVersion = PolicyVersion.Policy15 }
 			};
-			var host = new ServiceHost(typeof(TopDownMainServerWcfServiceLibrary.MyService), new Uri("http://26.101.252.249:5003/MyService"));
+			var host = new ServiceHost(typeof(TopDownMainServerWcfServiceLibrary.MyService), new Uri($"http://{ConfigurationManager.AppSettings["ServerAddress"]}:{ConfigurationManager.AppSettings["ServerPort"]}/MyService"));
 			host.Description.Behaviors.Add(behavior);
 			host.AddServiceEndpoint(typeof(TopDownMainServerWcfServiceLibrary.IMyService), new BasicHttpBinding(), "basic");
 			// host.AddServiceEndpoint(typeof(TopDownMainServerWcfServiceLibrary.IMyService), new WSHttpBinding(), "ws");
