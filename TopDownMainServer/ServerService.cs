@@ -59,6 +59,7 @@ namespace TopDownMainServer
                     {
                         ser.Status = server.Status;
                         ser.Info = server.Info;
+                        ser.PingPort = server.PingPort;
                     }
 
                     sc.SaveChanges();
@@ -102,7 +103,7 @@ namespace TopDownMainServer
         {
             try
             {
-                TcpClient tcpClient = new TcpClient(server.Address, server.Port);
+                TcpClient tcpClient = new TcpClient(server.Address, server.PingPort);
                 tcpClient.SendTimeout = 1000 * 15;
                 tcpClient.ReceiveTimeout = 1000 * 15;
 

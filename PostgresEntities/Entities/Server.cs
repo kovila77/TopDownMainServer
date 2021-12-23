@@ -18,6 +18,9 @@ namespace PostgresEntities.Entities
         [Key]
         [Column("port", Order = 1)]
         public int Port { get; set; }
+        
+        [Column("ping_port")]
+        public int PingPort { get; set; }
 
         [Column("status")]
         public int Status { get; set; }
