@@ -45,42 +45,57 @@ namespace TopDownMainServer
 
         public void NewServer(Server server)
         {
-            using (ServersContext sc = new ServersContext())
+            try
             {
-                var ser = sc.Servers.Find(server.Address, server.Port);
-
-                if (ser is null)
+                using (ServersContext sc = new ServersContext())
                 {
-                    sc.Servers.Add(server);
-                }
-                else
-                {
-                    ser.Status = server.Status;
-                    ser.Info = server.Info;
-                }
+                    var ser = sc.Servers.Find(server.Address, server.Port);
 
-                sc.SaveChanges();
+                    if (ser is null)
+                    {
+                        sc.Servers.Add(server);
+                    }
+                    else
+                    {
+                        ser.Status = server.Status;
+                        ser.Info = server.Info;
+                        ser.PingPort = server.PingPort;
+                    }
+
+                    sc.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
         public void UpdateServersStatus(bool deleteBadOnes = false)
         {
-            using (ServersContext sc = new ServersContext())
+            try
             {
-                Parallel.ForEach(sc.Servers.ToList(), s =>
-               {
-                   int status = GetServerStatus(s);
+                using (ServersContext sc = new ServersContext())
+                {
+                    Parallel.ForEach(sc.Servers.ToList(), s =>
+                   {
+                       int status = GetServerStatus(s);
 
-                   if (status == 0)
-                   {
-                       sc.Servers.Remove(s);
-                   }
-                   else
-                   {
-                       s.Status = status;
-                   }
-               });
-                sc.SaveChanges();
+                       if (status == 0)
+                       {
+                           sc.Servers.Remove(s);
+                       }
+                       else
+                       {
+                           s.Status = status;
+                       }
+                   });
+                    sc.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
@@ -88,22 +103,25 @@ namespace TopDownMainServer
         {
             try
             {
-                TcpClient tcpClient = new TcpClient(server.Address, server.Port);
-                tcpClient.SendTimeout = 1000 * 15;
-                tcpClient.ReceiveTimeout = 1000 * 15;
-
-                using BinaryReader socketBinaryReader = new BinaryReader(tcpClient.GetStream());
-                using BinaryWriter socketBinaryWriter = new BinaryWriter(tcpClient.GetStream());
-                socketBinaryWriter.Write(1);
-
-                int response = socketBinaryReader.ReadInt32();
-                if (response is 1 or 2)
+                using (TcpClient tcpClient = new TcpClient(server.Address, server.PingPort))
                 {
-                    return response;
-                }
-                else
-                {
-                    throw new Exception("Unknown server status");
+
+                    tcpClient.SendTimeout = 1000 * 15;
+                    tcpClient.ReceiveTimeout = 1000 * 15;
+
+                    using BinaryReader socketBinaryReader = new BinaryReader(tcpClient.GetStream());
+                    using BinaryWriter socketBinaryWriter = new BinaryWriter(tcpClient.GetStream());
+                    socketBinaryWriter.Write(1);
+
+                    int response = socketBinaryReader.ReadInt32();
+                    if (response is 1 or 2)
+                    {
+                        return response;
+                    }
+                    else
+                    {
+                        throw new Exception("Unknown server status");
+                    }
                 }
             }
             catch (Exception e)
