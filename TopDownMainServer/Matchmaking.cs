@@ -12,7 +12,7 @@ namespace TopDownMainServer
 {
     public class Matchmaking
     {
-        public double CountDownTime => 1000 * 1;
+        public double CountDownTime => 1000 * 5;
 
         public int MaxPlayers => 8;
 
@@ -69,9 +69,10 @@ namespace TopDownMainServer
 
         public async Task<MatchmakingResult> GetServerAsync(CancellationTokenSource cancelSource)
         {
-	        lock (_playersQueue)
+            lock (_playersQueue)
             {
-	            _playersQueue.AddLast(cancelSource);
+                Console.WriteLine($"new player. Players in queue {_playersQueue.Count + 1}");
+                _playersQueue.AddLast(cancelSource);
 
                 if (!_isMatchmaking && _playersQueue.Count > 1)
                 {
