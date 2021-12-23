@@ -43,6 +43,7 @@ namespace TopDownMainServer
                 {
                     _timer.Interval = CountDownTime;
                     _timer.Start();
+                    return;
                 }
 
                 for (int i = 0; i < MaxPlayers; i++)
