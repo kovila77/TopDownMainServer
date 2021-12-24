@@ -18,12 +18,13 @@ namespace TopDownMainServer
 
         private readonly Timer _timer;
 
-        private readonly LinkedList<CancellationTokenSource> _playersQueue = new LinkedList<CancellationTokenSource>();
+        private readonly LinkedList<CancellationTokenSource> _playersQueue = new();
 
-        private readonly Dictionary<CancellationTokenSource, MatchmakingResult> _playersServers =
-            new Dictionary<CancellationTokenSource, MatchmakingResult>();
+        private readonly Dictionary<CancellationTokenSource, MatchmakingResult> _playersServers = new();
 
-        private bool _isMatchmaking = false;
+        private bool _timerGoing = false;
+
+        private Dictionary<Server, DateTime> _usedServers = new();
 
         public Matchmaking()
         {
@@ -52,22 +53,19 @@ namespace TopDownMainServer
                     {
                         break;
                     }
-                    else
-                    {
-                        var playerToGame = _playersQueue.First.Value;
-                        _playersQueue.RemoveFirst();
 
-                        _playersServers[playerToGame] = availableServer;
-                        playerToGame.Cancel();
-                    }
+                    var playerToGame = _playersQueue.First.Value;
+                    _playersQueue.RemoveFirst();
+
+                    _playersServers[playerToGame] = availableServer;
+                    playerToGame.Cancel();
                 }
 
-                _isMatchmaking = false;
+                _timer.Stop();
+                _timerGoing = false;
             }
         }
-
-
-
+        
         public async Task<MatchmakingResult> GetServerAsync(CancellationTokenSource cancelSource)
         {
             lock (_playersQueue)
@@ -75,11 +73,10 @@ namespace TopDownMainServer
                 Console.WriteLine($"new player. Players in queue {_playersQueue.Count + 1}");
                 _playersQueue.AddLast(cancelSource);
 
-                if (!_isMatchmaking && _playersQueue.Count > 1)
+                if (!_timerGoing && _playersQueue.Count > 1)
                 {
-                    _timer.Interval = CountDownTime;
                     _timer.Start();
-                    _isMatchmaking = true;
+                    _timerGoing = true;
                 }
             }
 
@@ -98,33 +95,46 @@ namespace TopDownMainServer
                     _playersServers.Remove(cancelSource);
                     return result;
                 }
-                else
-                {
-                    if (_playersQueue.Contains(cancelSource))
-                    {
-                        _playersQueue.Remove(cancelSource);
-                        if (_playersQueue.Count < 2)
-                        {
-                            _timer.Stop();
-                            _isMatchmaking = false;
-                        }
-                    }
 
-                    return null;
+                if (_playersQueue.Contains(cancelSource))
+                {
+                    _playersQueue.Remove(cancelSource);
+                    if (_playersQueue.Count < 2)
+                    {
+                        _timer.Stop();
+                        _timerGoing = false;
+                    }
                 }
+
+                return null;
             }
         }
 
         private MatchmakingResult GetAvailableServer()
         {
+            List<Server> rem = new List<Server>();
+            foreach (var ser in _usedServers)
+            {
+                if ((DateTime.Now - ser.Value).TotalSeconds > 10)
+                {
+                    rem.Add(ser.Key);
+                }
+            }
+            rem.ForEach(x => _usedServers.Remove(x));
+
             using ServersContext sc = new ServersContext();
+
 
             foreach (var server in sc.Servers.Where(x => x.Status == 1))
             {
+                if (_usedServers.Any(x => x.Key.Address == server.Address && x.Key.Port == server.Port)) continue;
+
                 var status = ServerService.GetServerStatus(server);
 
                 if (status == 1)
                 {
+                    _usedServers.Add(server, DateTime.Now);
+
                     return new MatchmakingResult()
                     {
                         ServerAddress = server.Address,
