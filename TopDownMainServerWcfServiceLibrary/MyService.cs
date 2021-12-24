@@ -10,30 +10,35 @@ using System.Threading;
 
 namespace TopDownMainServerWcfServiceLibrary
 {
-	[ServiceBehavior(IncludeExceptionDetailInFaults = true)]
+    [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
     public class MyService : IMyService
     {
-	    public (string, int) GetAvailableServer() {
-		    try {
-				using (TcpClient client = new TcpClient("localhost", 9090))
-				{
-					using (var streamReader = new BinaryReader(client.GetStream()))
-					{
-						using (var streamWriter = new BinaryWriter(client.GetStream()))
-						{
-							streamWriter.Write(1);
-							string address = streamReader.ReadString();
-							int port = streamReader.ReadInt32();
-							Console.WriteLine($"New server: {address}:{port}");
-							return (address, port);
-						}
-					}
-				}
-			} catch (Exception e) {
-				Console.WriteLine(e);
-			}
+        public (string, int) GetAvailableServer()
+        {
+            try
+            {
+                using (TcpClient client = new TcpClient("localhost", 9090))
+                {
+                    using (var streamReader = new BinaryReader(client.GetStream()))
+                    {
+                        using (var streamWriter = new BinaryWriter(client.GetStream()))
+                        {
+                            streamWriter.Write(1);
+                            string address = streamReader.ReadString();
+                            int port = streamReader.ReadInt32();
+                            Console.WriteLine($"New server: {address}:{port}");
+                            return (address, port);
+                        }
+                    }
+                    client.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
 
-			return (null, -1);
-	    }
+            return (null, -1);
+        }
     }
 }

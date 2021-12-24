@@ -101,11 +101,11 @@ namespace TopDownMainServer
 
         public static int GetServerStatus(Server server)
         {
-            try
+            lock (_timer)
             {
-                using (TcpClient tcpClient = new TcpClient(server.Address, server.PingPort))
+                try
                 {
-
+                    using TcpClient tcpClient = new TcpClient(server.Address, server.PingPort);
                     tcpClient.SendTimeout = 1000 * 15;
                     tcpClient.ReceiveTimeout = 1000 * 15;
 
@@ -122,12 +122,13 @@ namespace TopDownMainServer
                     {
                         throw new Exception("Unknown server status");
                     }
+                    tcpClient.Close();
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return 0;
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return 0;
+                }
             }
         }
     }
