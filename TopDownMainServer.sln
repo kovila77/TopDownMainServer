@@ -9,10 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgresEntities", "Postgre
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TopDownMainSeverListener", "TopDownMainSeverListener\TopDownMainSeverListener.csproj", "{554D5C00-FFD3-4397-93E0-29DEFD63C9BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TopDownMainServerWcfServiceLibrary", "TopDownMainServerWcfServiceLibrary\TopDownMainServerWcfServiceLibrary.csproj", "{C9AF3C32-66B1-4410-8809-CC9DF5392B5F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TopDownMainServerWcfServiceHost", "TopDownMainServerWcfServiceHost\TopDownMainServerWcfServiceHost.csproj", "{7A157E9B-992F-4E3B-BF44-32A4C36A45B0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,14 +27,6 @@ Global
 		{554D5C00-FFD3-4397-93E0-29DEFD63C9BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{554D5C00-FFD3-4397-93E0-29DEFD63C9BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{554D5C00-FFD3-4397-93E0-29DEFD63C9BB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C9AF3C32-66B1-4410-8809-CC9DF5392B5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C9AF3C32-66B1-4410-8809-CC9DF5392B5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C9AF3C32-66B1-4410-8809-CC9DF5392B5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C9AF3C32-66B1-4410-8809-CC9DF5392B5F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7A157E9B-992F-4E3B-BF44-32A4C36A45B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A157E9B-992F-4E3B-BF44-32A4C36A45B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A157E9B-992F-4E3B-BF44-32A4C36A45B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A157E9B-992F-4E3B-BF44-32A4C36A45B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
