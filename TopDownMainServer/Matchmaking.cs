@@ -12,7 +12,7 @@ namespace TopDownMainServer
 {
     public class Matchmaking
     {
-        public double CountDownTime => 1000 * 5;
+        public double CountDownTime => 1000 * 20;
 
         public int MaxPlayers => 8;
 
