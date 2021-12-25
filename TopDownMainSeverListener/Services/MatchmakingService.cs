@@ -16,39 +16,44 @@ namespace TopDownMainSeverListener.Services
             var listener = new TcpListener(IPAddress.Parse(ConfigurationManager.AppSettings["ServerMatchmakingAddress"]!), int.Parse(ConfigurationManager.AppSettings["ServerMatchmakingPort"]!));
             listener.Start();
             Matchmaking matchmaking = new Matchmaking();
-            while (true) {
-	            SendServerInfoToClient(listener.AcceptTcpClient(), matchmaking);
+            while (true)
+            {
+                var c = listener.AcceptTcpClient();
+                Task.Run(() => SendServerInfoToClient(c, matchmaking));
             }
         }
 
-        private static async Task SendServerInfoToClient(TcpClient tcpClient, Matchmaking matchmaking) {
-	        await Task.Run(() => {
-		        try {
-			        //using BinaryReader br = new BinaryReader(tcpClient.GetStream());
-			        using BinaryWriter bw = new BinaryWriter(tcpClient.GetStream());
-			        CancellationTokenSource cancellationToken = new CancellationTokenSource();
-			        cancellationToken.CancelAfter(TimeSpan.FromSeconds(60));
-			        var matchmakingResult = matchmaking.GetServerAsync(cancellationToken);
-			        matchmakingResult.Wait();
+        private static async Task SendServerInfoToClient(TcpClient tcpClient, Matchmaking matchmaking)
+        {
+            try
+            {
+                CancellationTokenSource cancellationToken = new CancellationTokenSource();
+                cancellationToken.CancelAfter(TimeSpan.FromSeconds(60));
+                var matchmakingResult = await matchmaking.GetServerAsync(cancellationToken);
 
-			        if (matchmakingResult.Result is null) {
-				        bw.Write("");
-				        bw.Write(-1);
-				        Console.WriteLine($"  {-1}");
-			        } else {
-				        bw.Write(matchmakingResult.Result.ServerAddress);
-				        bw.Write(matchmakingResult.Result.ServerPort);
-				        Console.WriteLine($"{matchmakingResult.Result.ServerAddress}   {matchmakingResult.Result.ServerPort}");
-			        }
+                await using BinaryWriter bw = new BinaryWriter(tcpClient.GetStream());
+                if (matchmakingResult is null)
+                {
+                    bw.Write("");
+                    bw.Write(-1);
+                    Console.WriteLine($"  {-1}");
+                }
+                else
+                {
+                    bw.Write(matchmakingResult.ServerAddress);
+                    bw.Write(matchmakingResult.ServerPort);
+                    Console.WriteLine($"{matchmakingResult.ServerAddress}   {matchmakingResult.ServerPort}");
+                }
 
-			        tcpClient.Close();
-		        } catch (Exception e) {
-			        Console.WriteLine(e.Message);
-			        tcpClient.Close();
-		        }
+                tcpClient.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                tcpClient.Close();
+            }
 
-		        tcpClient.Dispose();
-	        });
+            tcpClient.Dispose();
         }
     }
 }

@@ -110,8 +110,6 @@ namespace TopDownMainServer
                     tcpClient.ReceiveTimeout = 1000 * 15;
 
                     using BinaryReader socketBinaryReader = new BinaryReader(tcpClient.GetStream());
-                    using BinaryWriter socketBinaryWriter = new BinaryWriter(tcpClient.GetStream());
-                    socketBinaryWriter.Write(1);
 
                     int response = socketBinaryReader.ReadInt32();
                     if (response is 1 or 2)
@@ -122,7 +120,6 @@ namespace TopDownMainServer
                     {
                         throw new Exception("Unknown server status");
                     }
-                    tcpClient.Close();
                 }
                 catch (Exception e)
                 {
