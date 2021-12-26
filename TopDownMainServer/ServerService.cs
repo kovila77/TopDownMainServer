@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Timers;
@@ -105,10 +106,14 @@ namespace TopDownMainServer
             {
                 try
                 {
-                    using TcpClient tcpClient = new TcpClient(server.Address, server.PingPort);
+                    using TcpClient tcpClient = new TcpClient();
                     tcpClient.SendTimeout = 1000 * 15;
                     tcpClient.ReceiveTimeout = 1000 * 15;
+                    var ipAddresses = Array.FindAll(
+                        Dns.GetHostEntry(server.Address).AddressList,
+                        a => a.AddressFamily == AddressFamily.InterNetwork);
 
+                    tcpClient.Connect(ipAddresses, server.PingPort);
                     using BinaryReader socketBinaryReader = new BinaryReader(tcpClient.GetStream());
 
                     int response = socketBinaryReader.ReadInt32();
