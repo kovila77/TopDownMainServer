@@ -107,8 +107,8 @@ namespace TopDownMainServer
                 try
                 {
                     using TcpClient tcpClient = new TcpClient();
-                    tcpClient.SendTimeout = 1000 * 15;
-                    tcpClient.ReceiveTimeout = 1000 * 15;
+                    tcpClient.SendTimeout = 1000 * 5;
+                    tcpClient.ReceiveTimeout = 1000 * 5;
                     var ipAddresses = Array.FindAll(
                         Dns.GetHostEntry(server.Address).AddressList,
                         a => a.AddressFamily == AddressFamily.InterNetwork);

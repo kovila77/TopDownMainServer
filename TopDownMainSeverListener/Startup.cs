@@ -26,9 +26,9 @@ namespace TopDownMainSeverListener
 
                 var factory = new ConnectionFactory()
                 {
-                    HostName = ConfigurationManager.AppSettings.Get("RabbitMQHostName"),
-                    UserName = ConfigurationManager.AppSettings.Get("RabbitMQUserName"),
-                    Password = ConfigurationManager.AppSettings.Get("RabbitMQPassword")
+                    HostName = Environment.GetEnvironmentVariable("TOPDOWN_RABBITMQ_HOSTNAME"),
+                    UserName = Environment.GetEnvironmentVariable("TOPDOWN_RABBITMQ_USERNAME"),
+                    Password = Environment.GetEnvironmentVariable("TOPDOWN_RABBITMQ_PASSWORD")
                 };
 
                 return new RabbitMQPersistentConnection(factory);

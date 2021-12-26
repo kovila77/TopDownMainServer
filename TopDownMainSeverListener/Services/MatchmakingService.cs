@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -13,7 +14,11 @@ namespace TopDownMainSeverListener.Services
     {
         public void Run()
         {
-            var listener = new TcpListener(IPAddress.Parse(ConfigurationManager.AppSettings["ServerMatchmakingAddress"]!), int.Parse(ConfigurationManager.AppSettings["ServerMatchmakingPort"]!));
+            var ipAddresses = Array.FindAll(
+                Dns.GetHostEntry(Dns.GetHostName()).AddressList,
+                a => a.AddressFamily == AddressFamily.InterNetwork);
+            var listener = new TcpListener(ipAddresses.First(), 
+                Convert.ToInt32(Environment.GetEnvironmentVariable("TOPDOWN_GAMESERVER_PORT")));
             listener.Start();
             Matchmaking matchmaking = new Matchmaking();
             while (true)

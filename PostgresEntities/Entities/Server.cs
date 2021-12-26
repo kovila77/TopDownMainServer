@@ -13,16 +13,20 @@ namespace PostgresEntities.Entities
     {
         [Key]
         [Column("address", Order = 0)]
+        [Required]
         public string Address { get; set; }
 
         [Key]
         [Column("port", Order = 1)]
+        [Required]
         public int Port { get; set; }
-        
+
         [Column("ping_port")]
+        [Required]
         public int PingPort { get; set; }
 
         [Column("status")]
+        [Required]
         public int Status { get; set; }
 
         [Column("info")]

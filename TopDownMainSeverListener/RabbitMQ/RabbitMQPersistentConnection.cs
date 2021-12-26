@@ -34,7 +34,7 @@ namespace TopDownMainSeverListener.RabbitMQ
                 TryConnect();
             }
 
-            _eventBusRabbitMQ = new EventBusRabbitMQ(this, ConfigurationManager.AppSettings.Get("RabbitMQServerQueue"));
+            _eventBusRabbitMQ = new EventBusRabbitMQ(this, Environment.GetEnvironmentVariable("TOPDOWN_RABBITMQ_SERVERQUEUE"));
             _eventBusRabbitMQ.CreateConsumerChannel();
         }
 

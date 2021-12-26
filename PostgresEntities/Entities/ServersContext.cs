@@ -11,13 +11,18 @@ namespace PostgresEntities.Entities
     {
         public DbSet<Server> Servers { get; set; }
 
+        public ServersContext()
+        {
+            Database.EnsureCreated();
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql($"Host={System.Configuration.ConfigurationManager.AppSettings.Get("DbAddress")};" +
-                                     $"Port={System.Configuration.ConfigurationManager.AppSettings.Get("DbPort")};" +
-                                     $"Database={System.Configuration.ConfigurationManager.AppSettings.Get("DbName")};" +
-                                     $"Username={System.Configuration.ConfigurationManager.AppSettings.Get("DbUserName")};" +
-                                     $"Password={System.Configuration.ConfigurationManager.AppSettings.Get("DbUserPassword")}"
+            optionsBuilder.UseNpgsql($"Host={Environment.GetEnvironmentVariable("TOPDOWN_DATABASE_ADDRESS")};" +
+                                     $"Port={Environment.GetEnvironmentVariable("TOPDOWN_DATABASE_PORT")};" +
+                                     $"Database={Environment.GetEnvironmentVariable("TOPDOWN_DATABASE_NAME")};" +
+                                     $"Username={Environment.GetEnvironmentVariable("TOPDOWN_DATABASE_USERNAME")};" +
+                                     $"Password={Environment.GetEnvironmentVariable("TOPDOWN_DATABASE_PASSWORD")}"
             );
         }
 
