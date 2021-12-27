@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>897439b7-ded4-4509-9bc1-2a3e9a190cf9</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-	  <DockerfileTag>europe-docker.pkg.dev/platinum-depot-336209/hello-repo/topdown-main-server:v0.3</DockerfileTag>
+	  <DockerfileTag>europe-docker.pkg.dev/platinum-depot-336209/hello-repo/topdown-main-server:v0.4</DockerfileTag>
   </PropertyGroup>
 
   <ItemGroup>
