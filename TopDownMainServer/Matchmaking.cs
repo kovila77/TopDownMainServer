@@ -28,7 +28,7 @@ namespace TopDownMainServer
 
         public Matchmaking()
         {
-            _timer = new Timer();
+            _timer = new Timer(CountDownTime);
 
             _timer.AutoReset = false;
 
@@ -42,7 +42,7 @@ namespace TopDownMainServer
                 var availableServer = GetAvailableServer();
                 if (availableServer == null) // no available servers
                 {
-                    _timer.Interval = CountDownTime;
+	                _timer.Stop();
                     _timer.Start();
                     return;
                 }
@@ -61,8 +61,13 @@ namespace TopDownMainServer
                     playerToGame.Cancel();
                 }
 
-                _timer.Stop();
-                _timerGoing = false;
+                if (_playersQueue.Count < 1) {
+	                _timer.Stop();
+	                _timerGoing = false;
+                } else {
+	                _timer.Stop();
+                    _timer.Start();
+                }
             }
         }
         
@@ -75,6 +80,7 @@ namespace TopDownMainServer
 
                 if (!_timerGoing && _playersQueue.Count > 1)
                 {
+	                _timer.Stop();
                     _timer.Start();
                     _timerGoing = true;
                 }
